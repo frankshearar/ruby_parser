@@ -1249,27 +1249,33 @@ rule
                     }
                     paren_args
                     {
+                      self.comments.push self.lexer.comments
                       result = new_call nil, val[0].to_sym, val[2]
                     }
                 | primary_value tDOT operation2 opt_paren_args
                     {
+                      self.comments.push self.lexer.comments
                       result = new_call val[0], val[2].to_sym, val[3]
                     }
                 | primary_value tCOLON2 operation2 paren_args
                     {
+                      self.comments.push self.lexer.comments
                       result = new_call val[0], val[2].to_sym, val[3]
                     }
                 | primary_value tCOLON2 operation3
                     {
+                      self.comments.push self.lexer.comments
                       result = new_call val[0], val[2].to_sym
                     }
                 | kSUPER paren_args
                     {
+                      self.comments.push self.lexer.comments
                       result = new_super val[1]
                     }
                 | kSUPER
                     {
-                      result = s(:zsuper)
+                      self.comments.push self.lexer.comments
+                      result = new_bare_super
                     }
 
      brace_block: tLCURLY

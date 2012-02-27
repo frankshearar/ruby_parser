@@ -485,6 +485,7 @@ module RubyParserStuff
   def new_call recv, meth, args = nil
     result = s(:call, recv, meth)
     result.line = recv.line if recv
+    result.comments = self.comments.pop
 
     args ||= s(:arglist)
     args[0] = :arglist if args.first == :array
@@ -667,12 +668,20 @@ module RubyParserStuff
   end
 
   def new_super args
-    if args && args.node_type == :block_pass then
-      s(:super, args)
-    else
-      args ||= s(:arglist)
-      s(:super, *args[1..-1])
-    end
+    result = if args && args.node_type == :block_pass then
+               s(:super, args)
+             else
+               args ||= s(:arglist)
+               s(:super, *args[1..-1])
+             end
+    result.comments = self.comments.pop
+    result
+  end
+
+  def new_bare_super
+    result = s(:zsuper)
+    result.comments = self.comments.pop
+    result
   end
 
   def new_undef n, m = nil

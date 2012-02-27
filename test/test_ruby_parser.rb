@@ -172,6 +172,48 @@ module TestRubyParser
     assert_equal "# blah 1\n# blah 2\n\n", result.comments
   end
 
+  def test_method_call_comments
+    rb = "# blah 1\n# blah 2\n\nfoo('bar')"
+    pt = s(:call, nil, :foo, s(:arglist, s(:str, 'bar')))
+    assert_parse rb, pt
+    assert_equal "# blah 1\n# blah 2\n\n", result.comments
+  end
+
+  def test_super_with_args_comments
+    rb = "# blah 1\n# blah 2\n\nsuper(1)"
+    pt = s(:super, s(:lit, 1))
+    assert_parse rb, pt
+    assert_equal "# blah 1\n# blah 2\n\n", result.comments
+  end
+
+  def test_plain_super_comments
+    rb = "# blah 1\n# blah 2\n\nsuper"
+    pt = s(:zsuper)
+    assert_parse rb, pt
+    assert_equal "# blah 1\n# blah 2\n\n", result.comments
+  end
+
+  def test_receiverless_call_comments
+    rb = "# blah 1\n# blah 2\n\nbar(1)"
+    pt = s(:call, nil, :bar, s(:arglist, s(:lit, 1)))
+    assert_parse rb, pt
+    assert_equal "# blah 1\n# blah 2\n\n", result.comments
+  end
+
+  def test_receiver_call_comments
+    rb = "# blah 1\n# blah 2\n\nfoo.bar(1)"
+    pt = s(:call, s(:call, nil, :foo, s(:arglist)), :bar, s(:arglist, s(:lit, 1)))
+    assert_parse rb, pt
+    assert_equal "# blah 1\n# blah 2\n\n", result.comments
+  end
+
+  def test_module_call_comments
+    rb = "# blah 1\n# blah 2\n\nFoo::bar(1)"
+    pt = s(:call, s(:const, :Foo), :bar, s(:arglist, s(:lit, 1)))
+    assert_parse rb, pt
+    assert_equal "# blah 1\n# blah 2\n\n", result.comments
+  end
+
   def test_do_bug # TODO: rename
     rb = "a 1\na.b do |c|\n  # do nothing\nend"
     pt = s(:block,
