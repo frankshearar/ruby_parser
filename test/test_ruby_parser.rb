@@ -172,9 +172,40 @@ module TestRubyParser
     assert_equal "# blah 1\n# blah 2\n\n", result.comments
   end
 
+  # def test_parenless_argless_method_call_comments
+  #   rb = "# blah 1\n# blah 2\n\nfoo"
+  #   pt = s(:call, nil, :foo, s(:arglist))
+  #   assert_parse rb, pt
+  #   assert_equal "# blah 1\n# blah 2\n\n", result.comments
+  # end
+
   def test_method_call_comments
     rb = "# blah 1\n# blah 2\n\nfoo('bar')"
     pt = s(:call, nil, :foo, s(:arglist, s(:str, 'bar')))
+    assert_parse rb, pt
+    assert_equal "# blah 1\n# blah 2\n\n", result.comments
+  end
+
+  def test_consecutive_method_call_comments
+    rb = "# blah 1\nfoo('bar')\n# blah 2\nfoo('baz')"
+    pt = s(:block,
+           s(:call, nil, :foo, s(:arglist, s(:str, 'bar'))),
+           s(:call, nil, :foo, s(:arglist, s(:str, 'baz'))))
+    assert_parse rb, pt
+    assert_equal "# blah 1\n", result[1].comments
+    assert_equal "# blah 2\n", result[2].comments
+  end
+
+  def test_parenless_method_call_comments
+    rb = "# blah 1\n# blah 2\n\nfoo 'bar'"
+    pt = s(:call, nil, :foo, s(:arglist, s(:str, 'bar')))
+    assert_parse rb, pt
+    assert_equal "# blah 1\n# blah 2\n\n", result.comments
+  end
+
+  def test_parenless_method_call_many_args_comments
+    rb = "# blah 1\n# blah 2\n\nfoo 'bar', 'baz'"
+    pt = s(:call, nil, :foo, s(:arglist, s(:str, 'bar'), s(:str, 'baz')))
     assert_parse rb, pt
     assert_equal "# blah 1\n# blah 2\n\n", result.comments
   end
@@ -185,6 +216,13 @@ module TestRubyParser
     assert_parse rb, pt
     assert_equal "# blah 1\n# blah 2\n\n", result.comments
   end
+
+  # def test_super_with_block_comments
+  #   rb = "# blah 1\n# blah 2\n\nsuper {x}"
+  #   pt = s(:iter, s(:zsuper), nil, s(:call, nil, :x, s(:arglist)))
+  #   assert_parse rb, pt
+  #   assert_equal "# blah 1\n# blah 2\n\n", result.comments
+  # end
 
   def test_plain_super_comments
     rb = "# blah 1\n# blah 2\n\nsuper"

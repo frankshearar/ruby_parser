@@ -253,6 +253,7 @@ rule
 
          command: operation command_args =tLOWEST
                     {
+                      self.comments.push self.lexer.comments
                       result = new_call nil, val[0].to_sym, val[1]
                     }
                 | operation command_args cmd_brace_block
