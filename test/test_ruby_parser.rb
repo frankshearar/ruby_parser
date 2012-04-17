@@ -172,6 +172,7 @@ module TestRubyParser
     assert_equal "# blah 1\n# blah 2\n\n", result.comments
   end
 
+  # This test currently fails because the node doesn't have any comments attached to it.
   # def test_parenless_argless_method_call_comments
   #   rb = "# blah 1\n# blah 2\n\nfoo"
   #   pt = s(:call, nil, :foo, s(:arglist))
@@ -251,6 +252,23 @@ module TestRubyParser
     assert_parse rb, pt
     assert_equal "# blah 1\n# blah 2\n\n", result.comments
   end
+
+  def test_method_with_hash
+    rb = "# blah 1\n# blah 2\n\nbar('string', :key => :value)"
+    pt = s(:call, nil, :bar, s(:arglist, s(:str, "string"), s(:hash, s(:lit, :key), s(:lit, :value))))
+    assert_parse rb, pt
+    assert_equal "# blah 1\n# blah 2\n\n", result.comments
+  end
+
+  # The comment is currently attached to baz(1), not bar(baz(1)). That happens
+  # because the most recent comment is attached to the first call to new_call
+  # that completes (a la LIFO).
+  # def test_nested_method_call_comments
+  #   rb = "# blah 1\n# blah 2\n\nbar(baz(1))"
+  #   pt = s(:call, nil, :bar, s(:arglist, s(:call, nil, :baz, s(:arglist, s(:lit, 1)))))
+  #   assert_parse rb, pt
+  #   assert_equal "# blah 1\n# blah 2\n\n", result.comments
+  # end
 
   def test_do_bug # TODO: rename
     rb = "a 1\na.b do |c|\n  # do nothing\nend"
