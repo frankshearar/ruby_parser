@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
 
   s.platform = Gem::Platform::RUBY
   s.summary = 'Fake gemspec for ruby_parser'
-  s.name = 'zipr'
+  s.name = 'ruby_parser'
   s.homepage = 'https://github.com/frankshearar/ruby_parser/'
   s.email = 'frank@lshift.net'
   s.license = 'MIT'
