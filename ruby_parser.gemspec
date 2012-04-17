@@ -1,4 +1,4 @@
-PKG_VERSION = '3.0.0a1-fbs'
+PKG_VERSION = '3.0.0a1fbs'
 
 Gem::Specification.new do |s|
   # These dependencies appear in the Gemfile.
