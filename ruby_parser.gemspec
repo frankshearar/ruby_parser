@@ -1,5 +1,3 @@
-PKG_VERSION = '3.0.0a1fbs'
-
 Gem::Specification.new do |s|
   # These dependencies appear in the Gemfile.
   s.add_development_dependency('rspec', '~> 2.8.0')
@@ -14,7 +12,7 @@ Gem::Specification.new do |s|
   s.email = 'frank@lshift.net'
   s.license = 'MIT'
   s.authors = ['Frank Shearar']
-  s.version = PKG_VERSION
+  s.version = '3.0.0a1fbs'
   s.requirements << 'none'
   s.require_paths = ['lib']
   s.required_rubygems_version = Gem::Requirement.new('>= 1.3.6') if s.respond_to? :required_rubygems_version=
