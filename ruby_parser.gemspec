@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/frankshearar/ruby_parser/'
   s.email = 'frank@lshift.net'
   s.license = 'MIT'
-  s.authors = ['Frank Shearar']
+  s.authors = ['zenspider', 'Hacks by Frank Shearar']
   s.version = '3.0.0a1fbs'
   s.requirements << 'none'
   s.require_paths = ['lib']
